@@ -1,6 +1,8 @@
 <# Checks the license assignment type of a 365 license and removes the direct license from all users that are currently inheriting the same license from a group. 
 #>
 
+Connect-MsolService
+
 #BEGIN: Helper functions used by the script
 
 #Returns TRUE if the user has the license assigned directly
