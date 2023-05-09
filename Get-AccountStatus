@@ -1,0 +1,29 @@
+<# Takes the display name of a list of users in a .csv and checks their account status in Azure AD. Exports the results to a new .csv
+#>
+
+Connect-AzureAD
+
+$basePath = <target path>
+$count = 1
+$filePath = $basePath
+
+# Checks if file path already exists to prevent overwrite
+while (Test-Path $filePath) {
+    $filePath = $basePath -replace '\.csv$', "_$count.csv"
+    $count++
+}
+
+$users = Import-Csv -Path <insert source .csv path here>
+
+foreach ($user in $users) {
+    $azureUser = Get-AzureADUser -Filter "displayName eq '$($user.Username)'" # Username needs to be the heading of the column in the .csv that contains all the users' display names
+    if ($azureUser.AccountEnabled -eq $false) {
+        $user.Status = "Disabled"
+    } elseif ($azureUser.AccountEnabled -eq $true){
+        $user.Status = "Enabled"
+    } else {
+        $user.Status = "User not found"
+    }
+}
+
+$users | Export-Csv -Path $filePath -NoTypeInformation
