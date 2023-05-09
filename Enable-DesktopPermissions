@@ -1,3 +1,7 @@
+<# Grants Authenticated Users 'Modify' permission to the Public Desktop folder. 
+This will allow your users to delete desktop shortcuts without admin elevation.
+#>
+
 $folderPath = "C:\Users\Public\Desktop"
 $acl = Get-Acl $folderPath
 $user = New-Object System.Security.Principal.SecurityIdentifier('S-1-5-11')
